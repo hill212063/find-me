@@ -26,6 +26,7 @@ const SocketHandler = (req: NextApiRequest, res: NextApiResponseWithSocket) => {
 
     io.on('connection', socket => {
       socket.on('send-location', msg => {
+        console.log("Received message" + msg)
         socket.broadcast.emit('update-location', msg)
       })
     })

@@ -23,7 +23,6 @@ export default function SendLocPage() {
     if (isStream) {
       intervalIdRef.current = setInterval(() => {
         streamingLocation();
-        // console.log(intervalIdRef.current)
       }, 1000);
     } else {
       console.log("Stop" + intervalIdRef.current);
@@ -41,8 +40,8 @@ export default function SendLocPage() {
         lat: pos.coords.latitude,
         lon: pos.coords.longitude
       }
-      // console.log("send location");
-      // console.log(msg);
+      console.log("send location");
+      console.log(msg);
       socket.emit("send-location", msg);
     })
   }
