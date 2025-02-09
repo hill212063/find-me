@@ -4,7 +4,7 @@ import { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer } from "react-leaflet";
-import MarkerWrapper from './marker-wrapper';
+import MarkerAdmin from './marker-admin';
 import { socket } from './socket';
 
 
@@ -21,10 +21,8 @@ const MapClient: React.FC = () => {
       console.log('client connected')
     })
     socket.on('update-location', msg => {
-      console.log(msg)
       setCurrentLocation(msg)
     })
-    return null;
   }
 
   return (
@@ -34,7 +32,7 @@ const MapClient: React.FC = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <MarkerWrapper markerPosition={currentLocation} markerName='Current' />
+        <MarkerAdmin markerPosition={currentLocation} markerName='Current' />
       </MapContainer>
     </div>
   )
