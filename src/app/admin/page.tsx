@@ -1,12 +1,12 @@
 "use client";
 
 import { socket } from '@/src/components/socket';
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react';
 
 export default function AdminPage() {
 
-  const [isStream, setIsStream] = useState(false);
-  const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
+  const [isStream, setIsStream] = useState<boolean>(false);
+  const [watchPositionID, setWatchPositionID] = useState<number>();
 
   useEffect(() => { initSocket(); }, [])
 
@@ -19,26 +19,17 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (isStream) {
-      intervalIdRef.current = setInterval(() => {
-        streamingLocation();
-      }, 1000);
+      const watchID = navigator.geolocation.watchPosition((pos) => {
+        const msg = [pos.coords.latitude, pos.coords.longitude];
+        console.log("send location");
+        console.log(msg);
+        socket.emit("send-location", msg);
+      })
+      setWatchPositionID(watchID);
     } else {
-      console.log("Stop" + intervalIdRef.current);
-      if (intervalIdRef.current) clearInterval(intervalIdRef.current);
+      if (watchPositionID) navigator.geolocation.clearWatch(watchPositionID);
     }
   }, [isStream]);
-
-  const streamingLocation = () => {
-    navigator.geolocation.getCurrentPosition((pos) => {
-      const msg = {
-        lat: pos.coords.latitude,
-        lon: pos.coords.longitude
-      }
-      console.log("send location");
-      console.log(msg);
-      socket.emit("send-location", msg);
-    })
-  }
 
   const onStream = () => {
     setIsStream(!isStream);
