@@ -1,5 +1,5 @@
 FROM node:22-alpine
 WORKDIR /code
 EXPOSE 3000
-COPY . .
+COPY ./out/ .
 CMD ["npm", "run", "dev"]

@@ -1,7 +1,7 @@
 "use client";
 
 import { socket } from '@/src/components/socket';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function AdminPage() {
 

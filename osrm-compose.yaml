@@ -1,9 +1,4 @@
-name: osrm-backend
 services:
-  find-me:
-    build: .
-    ports:
-      - "3000:3000"
   osrm-backend:
     image: ghcr.io/project-osrm/osrm-backend
     tty: true
