@@ -1,0 +1,39 @@
+name: osrm-backend
+services:
+  find-me:
+    build: .
+    ports:
+      - "3000:3000"
+  osrm-backend:
+    image: ghcr.io/project-osrm/osrm-backend
+    tty: true
+    stdin_open: true
+    ports:
+      - 5000:5000
+    volumes:
+      - ./osrm-data:/data
+    command: >
+      bash -c "
+      apt update -y && upgrade -y;
+      apt install wget -y;
+
+      if [ ! -f /data/map.osm.pbf ]; then
+        echo 'Downloading OSM data...';
+        wget -O /data/map.osm.pbf https://download.geofabrik.de/asia/thailand-latest.osm.pbf;
+      fi
+
+      if [ ! -f /data/foot.lua ]; then
+        echo 'Downloading foot.lua profile...';
+        wget -O /data/foot.lua https://raw.githubusercontent.com/Project-OSRM/osrm-backend/master/profiles/foot.lua;
+      fi
+
+      if [ ! -f /data/map.osrm ]; then
+        echo 'Extracting OSM data...';
+        osrm-extract -p /data/foot.lua /data/map.osm.pbf;
+        echo 'Contracting OSRM data...';
+        osrm-contract /data/map.osrm;
+      fi
+
+      echo 'Starting OSRM routing server...';
+      osrm-routed --algorithm mld /data/map.osrm
+      "
