@@ -7,13 +7,13 @@ import { MapContainer, Polyline, TileLayer } from "react-leaflet";
 import MarkerWrapper from './marker-wrapper';
 import { socket } from './socket';
 
-const MapClient: React.FC = () => {
+const Map: React.FC = () => {
 
   const bangkokLocation: LatLngTuple = [13.7563, 100.5018];
   const [adminLocation, setAdminLocation] = useState<LatLngTuple>(bangkokLocation);
   const [clientLocation, setClientLocation] = useState<LatLngTuple>(bangkokLocation);
   const [route, setRoute] = useState<LatLngTuple[]>([]);
-  const OSRM_ROUTE_URL = `https://router.project-osrm.org/route/v1/driving/${clientLocation[1]},${clientLocation[0]};${adminLocation[1]},${adminLocation[0]}?overview=full&geometries=geojson`;
+  const OSRM_ROUTE_URL = `https://router.project-osrm.org/route/v1/walking/${clientLocation[1]},${clientLocation[0]};${adminLocation[1]},${adminLocation[0]}?overview=full&geometries=geojson`;
 
   useEffect(() => { initSocket(); watchClientLocation(); }, [])
   useEffect(() => { getRoutingData(); }, [clientLocation, adminLocation])
@@ -35,20 +35,21 @@ const MapClient: React.FC = () => {
     })
   }
 
-  const getRoutingData = () => {
-    fetch(OSRM_ROUTE_URL)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data)
-        if (data.routes.length > 0) {
-          const coordinates: LatLngTuple[] = data.routes[0].geometry.coordinates.map(
-            (point: [number, number]) => [point[1], point[0]] // Swap lng, lat → lat, lng
-          );
-          setRoute(coordinates)
-        }
-      })
-      .catch((err) => console.error("Error fetching route:", err));
+  const getRoutingData = async () => {
+    try {
+      const routeData = await ((await fetch(OSRM_ROUTE_URL)).json());
+      console.log(routeData);
+      if (routeData.routes.length > 0) {
+        const coordinates: LatLngTuple[] = routeData.routes[0].geometry.coordinates.map(
+          (point: [number, number]) => [point[1], point[0]] // Swap lng, lat → lat, lng
+        );
+        setRoute(coordinates)
+      }
+    } catch (error) {
+      console.error("Error fetching route:", error);
+    }
   }
+
 
 
   return (
@@ -65,4 +66,4 @@ const MapClient: React.FC = () => {
     </div>
   )
 }
-export default MapClient;
+export default Map;
