@@ -12,6 +12,7 @@ const Map: React.FC = () => {
   const bangkokLocation: LatLngTuple = [13.7563, 100.5018];
   const [adminLocation, setAdminLocation] = useState<LatLngTuple>(bangkokLocation);
   const [clientLocation, setClientLocation] = useState<LatLngTuple>(bangkokLocation);
+  const [isInitLocation, setIsInitLocation] = useState<boolean>(false);
   const [route, setRoute] = useState<LatLngTuple[]>([]);
 
   useEffect(() => { initSocketAndLocations(); }, [])
@@ -21,8 +22,8 @@ const Map: React.FC = () => {
     await initSocket();
     getUpdatedAdminLocation();
     getUpdatedClientLocation();
+    setIsInitLocation(true);
   }
-
   const initSocket = async () => {
     await fetch('/api/socket');
     socket.on('connect', () => {
@@ -75,7 +76,7 @@ const Map: React.FC = () => {
         />
         <MarkerWrapper markerPosition={adminLocation} markerName="Admin" />
         <MarkerWrapper markerPosition={clientLocation} markerName="Client" />
-        {route.length > 0 && <Polyline positions={route} color="green" />}
+        {isInitLocation && route.length > 0 && <Polyline positions={route} color="green" />}
       </MapContainer>
     </div>
   )
