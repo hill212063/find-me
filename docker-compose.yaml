@@ -4,7 +4,7 @@ services:
     tty: true
     stdin_open: true
     ports:
-      - 5000:5000
+      - 8080:5000
     volumes:
       - ./osrm-data:/data
     command: >
@@ -17,16 +17,18 @@ services:
         wget -O /data/map.osm.pbf https://download.geofabrik.de/asia/thailand-latest.osm.pbf;
       fi
 
-      if [ ! -f /data/foot.lua ]; then
-        echo 'Downloading foot.lua profile...';
-        wget -O /data/foot.lua https://raw.githubusercontent.com/Project-OSRM/osrm-backend/master/profiles/foot.lua;
+      if [ ! -f /data/car.lua ]; then
+        echo 'Downloading car.lua profile...';
+        wget -O /data/car.lua https://raw.githubusercontent.com/Project-OSRM/osrm-backend/master/profiles/car.lua;
       fi
 
       if [ ! -f /data/map.osrm ]; then
         echo 'Extracting OSM data...';
-        osrm-extract -p /data/foot.lua /data/map.osm.pbf;
+        osrm-extract -p /data/car.lua /data/map.osm.pbf;
+        echo 'Partitioning OSRM data...';
+        osrm-partition /data/map.osrm;
         echo 'Contracting OSRM data...';
-        osrm-contract /data/map.osrm;
+        osrm-customize /data/map.osrm;
       fi
 
       echo 'Starting OSRM routing server...';

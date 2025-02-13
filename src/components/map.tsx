@@ -63,7 +63,7 @@ const Map: React.FC = () => {
   }
 
   const getRouteURL = (start: LatLngTuple, end: LatLngTuple): string => {
-    return `http://localhost:5000/route/v1/walking/${start[1]},${start[0]};${end[1]},${end[0]}?overview=full&geometries=geojson`;
+    return `http://127.0.0.1:8080/route/v1/walking/${start[1]},${start[0]};${end[1]},${end[0]}?overview=full&geometries=geojson`;
   }
 
   return (
