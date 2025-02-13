@@ -1,7 +1,0 @@
-include: 
-  - osrm-compose.yaml
-services:
-  find-me:
-    build: .
-    ports:
-      - "3000:3000"
