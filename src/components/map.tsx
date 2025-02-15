@@ -68,17 +68,15 @@ const Map: React.FC = () => {
   }
 
   return (
-    <div style={{ width: "100%", height: "100%", aspectRatio: 1 }}>
-      <MapContainer style={{ width: "100%", height: "100%" }} center={adminLocation} zoom={13} scrollWheelZoom={true}>
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <MarkerWrapper markerPosition={adminLocation} markerName="Admin" />
-        <MarkerWrapper markerPosition={clientLocation} markerName="Client" />
-        {isInitLocation && route.length > 0 && <Polyline positions={route} color="green" />}
-      </MapContainer>
-    </div>
+    <MapContainer style={{ width: "100%", height: "70vh" }} center={adminLocation} zoom={13} scrollWheelZoom={true}>
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <MarkerWrapper markerPosition={adminLocation} markerName="Admin"/>
+      <MarkerWrapper markerPosition={clientLocation} markerName="Client"/>
+      {isInitLocation && route.length > 0 && <Polyline positions={route} color="green" />}
+    </MapContainer>
   )
 }
 export default Map;

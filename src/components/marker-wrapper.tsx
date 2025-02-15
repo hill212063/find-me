@@ -1,3 +1,5 @@
+"use client";
+
 import { LatLngExpression } from 'leaflet';
 import React from 'react';
 import { Marker, Popup } from "react-leaflet";
