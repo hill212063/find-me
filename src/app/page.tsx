@@ -10,9 +10,13 @@ export default function Home() {
   return (
     <div className="container is-desktop">
       <div className="ืnavbar">
-        <p className="is-size-1 has-text-centered">Find Me, If you can.</p>
+        <h1 className="title is-size-1-desktop is-size-3-mobile has-text-centered m-6">
+          Find Me, If you can.
+        </h1>
       </div>
-      <Map />
+      <div className="block m-4">
+        <Map />
+      </div>
     </div>
   );
 }

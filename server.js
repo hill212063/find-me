@@ -17,6 +17,10 @@ app.prepare().then(() => {
   io.on('connection', socket => {
     console.log('Client connected');
 
+    socket.on('send-location', msg => {
+      socket.broadcast.emit('update-location', msg)
+    })
+
     socket.on('disconnect', () => {
       console.log('Client disconnected');
     });

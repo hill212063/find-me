@@ -15,45 +15,44 @@ const Map: React.FC = () => {
   const [isInitLocation, setIsInitLocation] = useState<boolean>(false);
   const [route, setRoute] = useState<LatLngTuple[]>([]);
 
-  useEffect(() => { initSocketAndLocations(); }, [])
-  useEffect(() => { getRouteData(); }, [clientLocation, adminLocation])
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log('Connected to server');
+    });
 
-  const initSocketAndLocations = async () => {
-    await initSocket();
-    getUpdatedAdminLocation();
-    getUpdatedClientLocation();
+    socket.on('update-location', adminLocationData => {
+      setAdminLocation(adminLocationData);
+    });
+
+    socket.on('disconnect', (reason) => {
+      console.log("Disconnect the server with this reason:", reason);
+    });
+
+    watchClientLocation();
     setIsInitLocation(true);
-  }
-  const initSocket = async () => {
-    await fetch('/api/socket');
-    socket.on('connect', () => {
-      console.log('client connected')
-    })
-  }
 
-  const getUpdatedAdminLocation = () => {
-    socket.on('update-location', msg => {
-      console.log('update location from admin')
-      setAdminLocation(msg)
-    })
-  }
+    return () => {
+      socket.disconnect();
+    }
+  }, []);
 
-  const getUpdatedClientLocation = () => {
+  const watchClientLocation = () => {
     navigator.geolocation.watchPosition((pos) => {
       const clientLocation: LatLngTuple = [pos.coords.latitude, pos.coords.longitude];
       setClientLocation(clientLocation);
-    })
+    });
   }
+
+  useEffect(() => { getRouteData(); }, [clientLocation, adminLocation]);
 
   const getRouteData = async () => {
     try {
       if (clientLocation[0] && clientLocation[1] && adminLocation[0] && adminLocation[1]) {
-        console.log(`client location: ${clientLocation}`);
-        console.log(`admin location: ${adminLocation}`);
         const routeData = await ((await fetch(getRouteURL(clientLocation, adminLocation))).json());
         if (routeData.routes.length > 0) {
           const coordinates: LatLngTuple[] = routeData.routes[0].geometry.coordinates.map(
-            (point: [number, number]) => [point[1], point[0]] // Swap lng, lat → lat, lng
+            // Change OSRM format to leaflet by Swap lng, lat → lat, lng
+            (point: [number, number]) => [point[1], point[0]]
           );
           setRoute(coordinates)
         }
@@ -68,13 +67,13 @@ const Map: React.FC = () => {
   }
 
   return (
-    <MapContainer style={{ width: "100%", height: "70vh" }} center={adminLocation} zoom={13} scrollWheelZoom={true}>
+    <MapContainer style={{ width: "100%", height: "70vh", borderRadius: "30px" }} center={adminLocation} zoom={13} scrollWheelZoom={true}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <MarkerWrapper markerPosition={adminLocation} markerName="Admin"/>
-      <MarkerWrapper markerPosition={clientLocation} markerName="Client"/>
+      <MarkerWrapper markerPosition={adminLocation} markerName="Admin" />
+      <MarkerWrapper markerPosition={clientLocation} markerName="Client" />
       {isInitLocation && route.length > 0 && <Polyline positions={route} color="green" />}
     </MapContainer>
   )
