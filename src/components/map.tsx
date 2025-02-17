@@ -74,7 +74,7 @@ const Map: React.FC = () => {
       />
       <MarkerWrapper markerPosition={adminLocation} markerName="Admin" markerColor="red" />
       <MarkerWrapper markerPosition={clientLocation} markerName="Client" markerColor="green" />
-      {isInitLocation && route.length > 0 && <Polyline positions={route} color="black" />}
+      {isInitLocation && route.length > 0 && <Polyline positions={route} color="blue" />}
     </MapContainer>
   )
 }
