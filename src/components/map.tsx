@@ -1,11 +1,11 @@
 "use client";
 
-import { LatLngTuple } from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import React, { useEffect, useState } from 'react';
+import { LatLngTuple } from "leaflet";
+import "leaflet/dist/leaflet.css";
+import React, { useEffect, useState } from "react";
 import { MapContainer, Polyline, TileLayer } from "react-leaflet";
-import MarkerWrapper from './marker-wrapper';
-import { socket } from './socket';
+import MarkerWrapper from "./marker-wrapper";
+import { socket } from "./socket";
 
 const Map: React.FC = () => {
 
@@ -17,14 +17,14 @@ const Map: React.FC = () => {
 
   useEffect(() => {
     socket.on("connect", () => {
-      console.log('Connected to server');
+      console.log("Connected to server");
     });
 
-    socket.on('update-location', adminLocationData => {
+    socket.on("update-location", adminLocationData => {
       setAdminLocation(adminLocationData);
     });
 
-    socket.on('disconnect', (reason) => {
+    socket.on("disconnect", (reason) => {
       console.log("Disconnect the server with this reason:", reason);
     });
 
@@ -69,12 +69,12 @@ const Map: React.FC = () => {
   return (
     <MapContainer style={{ width: "100%", height: "70vh", borderRadius: "30px" }} center={adminLocation} zoom={13} scrollWheelZoom={true}>
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <MarkerWrapper markerPosition={adminLocation} markerName="Admin" />
-      <MarkerWrapper markerPosition={clientLocation} markerName="Client" />
-      {isInitLocation && route.length > 0 && <Polyline positions={route} color="green" />}
+      <MarkerWrapper markerPosition={adminLocation} markerName="Admin" markerColor="red" />
+      <MarkerWrapper markerPosition={clientLocation} markerName="Client" markerColor="green" />
+      {isInitLocation && route.length > 0 && <Polyline positions={route} color="black" />}
     </MapContainer>
   )
 }
