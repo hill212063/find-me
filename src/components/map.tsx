@@ -20,8 +20,8 @@ const Map: React.FC = () => {
       console.log("Connected to server");
     });
 
-    socket.on("update-location", adminLocationData => {
-      setAdminLocation(adminLocationData);
+    socket.on("update-location", msg => {
+      setAdminLocation(msg);
     });
 
     socket.on("disconnect", (reason) => {
@@ -32,7 +32,9 @@ const Map: React.FC = () => {
     setIsInitLocation(true);
 
     return () => {
-      socket.disconnect();
+      socket.off("update-location");
+      socket.off("connect");
+      socket.off("disconnect");
     }
   }, []);
 

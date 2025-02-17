@@ -9,16 +9,17 @@ export default function AdminPage() {
   const [watchPositionID, setWatchPositionID] = useState<number>();
 
   useEffect(() => {
-    socket.on("connection", () => {
+    socket.on("connect", () => {
       console.log("Connected to server");
     });
 
-    socket.on("disconnect", () => {
-      console.log("Disconnect the server");
-    })
+    socket.on("disconnect", (reason) => {
+      console.log("Disconnect the server with this reason:", reason);
+    });
 
     return () => {
-      socket.disconnect();
+      socket.off("connect");
+      socket.off("disconnect");
     }
   }, [])
 
