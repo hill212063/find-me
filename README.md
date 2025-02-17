@@ -16,4 +16,5 @@ npm run dev
 # Reference
 - [Socket io with Next js](https://socket.io/how-to/use-with-nextjs)
 - [Guide for OSRM server](https://blog.afi.io/blog/introduction-to-osrm-setting-up-osrm-backend-using-docker/)
+- [Dockerfile example for Next js](https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile)
 
