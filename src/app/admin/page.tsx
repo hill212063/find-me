@@ -43,7 +43,7 @@ export default function AdminPage() {
   return (
     <div className="container is-flex is-flex-direction-column is-align-items-center" style={{ width: "80%" }}>
       <h1 className="title is-size-1-desktop is-size-3-mobile has-text-centered m-6">
-        Share location page
+        Admin page
       </h1>
       <button
         className="button is-medium"
